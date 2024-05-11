@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://cam4dj1ao4rh0"]
+
+[ext_resource type="PackedScene" uid="uid://tcsqv3pa7ikf" path="res://scenes/entities/Fish.tscn" id="1_rmypb"]
+
+[node name="Game" type="Node2D"]
+
+[node name="Fish" parent="." instance=ExtResource("1_rmypb")]
+position = Vector2(501, 343)
+scale = Vector2(5, 5)

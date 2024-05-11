@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://dra0mwerbxm13"]
+
+[ext_resource type="Script" path="res://scripts/states/StateMachine.gd" id="1_3of6v"]
+[ext_resource type="Script" path="res://scripts/states/fish/FishIdle.gd" id="2_0dcsk"]
+
+[node name="Fish" type="CharacterBody2D"]
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("1_3of6v")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("2_0dcsk")
