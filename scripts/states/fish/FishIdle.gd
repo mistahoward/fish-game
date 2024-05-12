@@ -1,10 +1,14 @@
 extends State
+class_name FishIdle
 
-@export var FishStance: CharacterBody2D
-@export var move_speed: float = 10.0
+signal velocity_update
 
 var move_direction: Vector2
 var wander_time: float
+var _move_speed: float
+
+func _init(move_speed = 10) -> void:
+	_move_speed = move_speed
 
 func randomize_wander() -> void:
 	move_direction = Vector2(randf_range(-1, 1), randf_range(-1, 1)).normalized()
@@ -19,4 +23,4 @@ func update(delta: float) -> void:
 	else: randomize_wander()
 
 func physics_update(_delta: float) -> void:
-	if FishStance: FishStance.velocity = move_direction * move_speed
+	velocity_update.emit(move_direction * _move_speed)

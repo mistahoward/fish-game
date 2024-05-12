@@ -24,7 +24,6 @@ func _death_check() -> void:
 	hunger_depleted.emit()
 
 func _icon_handler() -> void:
-	print(_hunger_percentage)
 	if _hunger_percentage >= 30:
 		update_icon.emit(Color8(0, 0, 0), false)
 	if _hunger_percentage <= 30 && _hunger_percentage >= 15:

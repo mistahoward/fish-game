@@ -1,18 +1,21 @@
 extends Node
+class_name StateMachine
 
-@export var initial_state: State
 var current_state: State
 var states: Dictionary = {}
+var _initial_state: State
+
+func _init(possible_states: Array[State] = [], initial_state: State = null) -> void:
+	for state in possible_states:
+		states[state.name.to_lower()] = state
+		state.Transitioned.connect(on_child_transition)
+		add_child(state)
+	_initial_state = initial_state
 
 func _ready() -> void:
-	for child in get_children():
-		if child is State:
-			states[child.name.to_lower()] = child
-			child.Transitioned.connect(on_child_transition)
-
-	if initial_state:
-		initial_state.enter()
-		current_state = initial_state
+	if _initial_state:
+		_initial_state.enter()
+		current_state = _initial_state
 
 func _process(delta: float) -> void:
 	if !current_state: return

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://tcsqv3pa7ikf"]
+[gd_scene load_steps=7 format=3 uid="uid://tcsqv3pa7ikf"]
 
 [ext_resource type="Script" path="res://scripts/states/StateMachine.gd" id="1_3of6v"]
 [ext_resource type="Script" path="res://scripts/entities/Fish.gd" id="1_idb6c"]
@@ -6,17 +6,19 @@
 [ext_resource type="Texture2D" uid="uid://b0275wtm3wn62" path="res://assets/fish-1.png" id="3_t7tt2"]
 [ext_resource type="Texture2D" uid="uid://j2hywbn1wtm8" path="res://assets/icons/hunger.png" id="5_bnj2g"]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_hvu82"]
+radius = 79.0063
+
 [node name="Fish" type="CharacterBody2D"]
 script = ExtResource("1_idb6c")
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+[node name="StateMachine" type="Node" parent="."]
 script = ExtResource("1_3of6v")
-initial_state = NodePath("Idle")
 
-[node name="Idle" type="Node" parent="StateMachine" node_paths=PackedStringArray("FishStance")]
+[node name="Idle" type="Node" parent="StateMachine"]
 script = ExtResource("2_0dcsk")
-FishStance = NodePath("../..")
-move_speed = 50.0
+
+[node name="Hungry" type="Node" parent="StateMachine"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("3_t7tt2")
@@ -25,3 +27,10 @@ texture = ExtResource("3_t7tt2")
 position = Vector2(-4.76837e-07, -11)
 scale = Vector2(0.21875, 0.21875)
 texture = ExtResource("5_bnj2g")
+
+[node name="food_zone" type="Area2D" parent="."]
+
+[node name="area" type="CollisionShape2D" parent="food_zone"]
+position = Vector2(-2, 0)
+shape = SubResource("CircleShape2D_hvu82")
+disabled = true
