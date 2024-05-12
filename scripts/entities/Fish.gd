@@ -10,15 +10,31 @@ var _hunger_state: State
 var _possible_states: Array[State]
 
 var _move_speed = 10
+var _sprite: Sprite2D
+var _name: String
+var _id: int
+var _value: int
+var _price: int
+var _max_health: int = 100
+var _max_hunger: int = 100
+var _hunger_decay: float = 0.5
+var _health_regen: float = 0.2
 
 var _hunger_detection_area: Area2D
 var _hunger_icon: Sprite2D
 
-var _sprite: Sprite2D
+func _init(details: FishDetails) -> void:
+	_id = details.id
+	_name = details.name
+	_value = details.value
+	_price = details.price
+	_max_health = details.max_health
+	_max_hunger = details.max_hunger
+	_hunger_decay = details.hunger_decay
+	_health_regen = details.health_regen
 
-func _init(hunger_detection_radius: float = 5.0) -> void:
 	_sprite = Sprite2D.new()
-	_sprite.texture = load("res://assets/fish-1.png")
+	_sprite.texture = details.sprite
 	_sprite.scale = Vector2(5, 5)
 
 	_hunger_icon = Sprite2D.new()
@@ -27,10 +43,15 @@ func _init(hunger_detection_radius: float = 5.0) -> void:
 	_hunger_icon.position.y = self.position.y - _sprite.texture.get_height() - (_sprite.texture.get_height() / 4)
 
 	var hunger_shape = CircleShape2D.new()
-	hunger_shape.radius = hunger_detection_radius
+	hunger_shape.radius = details.hunger_radius
 	var collision_shape = CollisionShape2D.new()
-	collision_shape.shape = collision_shape
+	collision_shape.disabled = true
+	collision_shape.shape = hunger_shape
 	_hunger_detection_area = Area2D.new()
+	_hunger_detection_area.position.x = self.position.x
+	_hunger_detection_area.position.y = self.position.y
+	_hunger_detection_area.monitorable = true
+	_hunger_detection_area.monitoring = false
 	_hunger_detection_area.add_child(collision_shape)
 
 func _ready() -> void:
@@ -40,8 +61,8 @@ func _ready() -> void:
 
 	print("fish instantiated")
 
-	_healthComponent = HealthComponent.new()
-	_hungerComponent = HungerComponent.new(30, 2)
+	_healthComponent = HealthComponent.new(_max_health, _health_regen)
+	_hungerComponent = HungerComponent.new(_max_hunger, _hunger_decay)
 
 	_hunger_state = FishHungry.new(_hunger_detection_area, _move_speed)
 	_idle_state = FishIdle.new(_move_speed)
@@ -62,7 +83,7 @@ func _ready() -> void:
 
 
 func update_position(new_position: Vector2):
-	velocity = new_position
+	velocity = new_position * _move_speed
 
 func _physics_process(_delta: float) -> void:
 	move_and_slide()

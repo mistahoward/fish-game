@@ -12,6 +12,8 @@ var _hunger_area: Area2D
 
 var _hunger_shape: CollisionShape2D
 
+var _hunger_move_speed_modifier: float = 3.25
+
 func enter() -> void:
 	panic_from_hunger()
 
@@ -27,7 +29,8 @@ func panic_from_hunger() -> void:
 		if children is CollisionShape2D:
 			_hunger_shape = children
 			_hunger_shape.disabled = false
-	_move_speed = _move_speed * 1.25
+	_hunger_area.monitoring = true
+	_move_speed = _move_speed * _hunger_move_speed_modifier
 	_hunger_area.area_entered.connect(func(arg1): chase_food(arg1))
 
 func randomize_wander() -> void:
@@ -51,5 +54,6 @@ func physics_update(_delta: float) -> void:
 	velocity_update.emit(_move_direction * _move_speed)
 
 func exit() -> void:
+	_hunger_area.monitoring = false
 	_hunger_shape.disabled = true
 	_move_speed = _initial_move_speed

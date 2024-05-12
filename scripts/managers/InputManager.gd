@@ -1,6 +1,13 @@
 extends Node2D
 class_name InputManager
 
+var _click: Signal
+
+func _init(click_ref: Signal) -> void:
+	self.name = "InputManager"
+	self.unique_name_in_owner = true
+	_click = click_ref
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -13,7 +20,4 @@ func _process(delta: float) -> void:
 func _input(event):
    # Mouse in viewport coordinates.
 	if event is InputEventMouseButton:
-		print("Mouse Click/Unclick at: ", event.position)
-
-   # Print the size of the viewport.
-	# print("Viewport Resolution is: ", get_viewport().get_visible_rect().size)
+		_click.emit(event.position)
