@@ -1,4 +1,4 @@
-class_name HealthComponent extends Node2D
+class_name HealthComponent extends Node
 
 class HealthDefaults:
 	const MAX: int = 100

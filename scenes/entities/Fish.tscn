@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://tcsqv3pa7ikf"]
+[gd_scene load_steps=6 format=3 uid="uid://tcsqv3pa7ikf"]
 
 [ext_resource type="Script" path="res://scripts/states/StateMachine.gd" id="1_3of6v"]
-[ext_resource type="Script" path="res://scripts/Fish.gd" id="1_idb6c"]
+[ext_resource type="Script" path="res://scripts/entities/Fish.gd" id="1_idb6c"]
 [ext_resource type="Script" path="res://scripts/states/fish/FishIdle.gd" id="2_0dcsk"]
 [ext_resource type="Texture2D" uid="uid://b0275wtm3wn62" path="res://assets/fish-1.png" id="3_t7tt2"]
+[ext_resource type="Texture2D" uid="uid://j2hywbn1wtm8" path="res://assets/icons/hunger.png" id="5_bnj2g"]
 
 [node name="Fish" type="CharacterBody2D"]
 script = ExtResource("1_idb6c")
@@ -19,3 +20,8 @@ move_speed = 50.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("3_t7tt2")
+
+[node name="hunger_icon" type="Sprite2D" parent="."]
+position = Vector2(-4.76837e-07, -11)
+scale = Vector2(0.21875, 0.21875)
+texture = ExtResource("5_bnj2g")
