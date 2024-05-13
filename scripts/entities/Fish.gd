@@ -6,6 +6,7 @@ var _hungerComponent: HungerComponent
 var _state_machine: StateMachine
 var _idle_state: State
 var _hunger_state: State
+var _death_state: State
 
 var _possible_states: Array[State]
 
@@ -20,8 +21,14 @@ var _max_hunger: int = 100
 var _hunger_decay: float = 0.5
 var _health_regen: float = 0.2
 
+var _scale_mutliplier: float = 5.0
+var _life_span: int = 10 # dev value
+var _time_alive: int = 0 # dev value
+
 var _hunger_detection_area: Area2D
 var _hunger_icon: Sprite2D
+
+var _time_elapsed: float = 0.0
 
 func _init(details: FishDetails) -> void:
 	_id = details.id
@@ -32,10 +39,13 @@ func _init(details: FishDetails) -> void:
 	_max_hunger = details.max_hunger
 	_hunger_decay = details.hunger_decay
 	_health_regen = details.health_regen
+	_scale_mutliplier = details.scale_multiplier
+	_life_span = details.life_span
+	_time_alive = details.time_alive
 
 	_sprite = Sprite2D.new()
 	_sprite.texture = details.sprite
-	_sprite.scale = Vector2(5, 5)
+	_sprite.scale = Vector2(_scale_mutliplier, _scale_mutliplier)
 
 	_hunger_icon = Sprite2D.new()
 	_hunger_icon.texture = load("res://assets/icons/hunger.png")
@@ -59,15 +69,16 @@ func _ready() -> void:
 	add_child(_hunger_icon)
 	add_child(_hunger_detection_area)
 
-	print("fish instantiated")
-
 	_healthComponent = HealthComponent.new(_max_health, _health_regen)
 	_hungerComponent = HungerComponent.new(_max_hunger, _hunger_decay)
 
 	_hunger_state = FishHungry.new(_hunger_detection_area, _move_speed)
 	_idle_state = FishIdle.new(_move_speed)
+	_death_state = FishDeath.new(self)
+
 	_possible_states.push_front(_idle_state)
 	_possible_states.push_front(_hunger_state)
+	_possible_states.push_front(_death_state)
 
 	_state_machine = StateMachine.new(_possible_states, _idle_state)
 
@@ -93,9 +104,17 @@ func _physics_process(_delta: float) -> void:
 	else:
 		_sprite.flip_h = true
 
+func _process(delta: float) -> void:
+	if _time_alive >= _life_span: print("die fish")
+
+	_time_elapsed += delta
+	if _time_elapsed >= 1:
+		_time_alive += 1
+		print("timer reset")
+		_time_elapsed = 0
+
 func die() -> void:
-	# play death stuff
-	queue_free()
+	_state_machine.enter_state_and_cleanup(_death_state)
 
 func handle_hunger(color, display_icon: bool) -> void:
 	if display_icon && _state_machine.current_state != _hunger_state: _state_machine.enter_state_and_cleanup(_hunger_state)

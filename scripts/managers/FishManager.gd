@@ -14,7 +14,10 @@ var fish_1 = {
 	"hunger_radius": 200,
 	"hunger_decay": 10, # dev decay
 	"max_health": 100,
-	"health_regen": 0.2
+	"health_regen": 0.2,
+	"scale_multiplier": 5,
+	"life_span": 10,
+	"time_alive": 0
 }
 
 func _init() -> void:
