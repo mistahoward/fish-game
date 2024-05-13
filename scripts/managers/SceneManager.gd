@@ -3,6 +3,7 @@ class_name SceneManager
 
 var _fish_manager: FishManager
 var _feeding_manager: FeedingManager
+var _background: Resource
 
 signal in_game
 
@@ -11,6 +12,9 @@ func _init(click_ref: Signal) -> void:
 	self.unique_name_in_owner = true
 	_fish_manager = FishManager.new()
 	_feeding_manager = FeedingManager.new(in_game, click_ref)
+	_background = preload("res://scenes/background.tscn")
+	var background_instance = _background.instantiate()
+	add_child(background_instance)
 	add_child(_feeding_manager)
 
 func _single_fish() -> void:

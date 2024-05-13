@@ -7,15 +7,15 @@ var fish_1 = {
 	"id": 1,
 	"name": "fishy-boi",
 	"sprite": load("res://assets/fish-1.png"),
-	"move_speed": 10,
+	"move_speed": 5,
 	"value": 100,
 	"price": 100,
 	"max_hunger": 100,
-	"hunger_radius": 200,
+	"hunger_radius": 100,
 	"hunger_decay": 10, # dev decay
 	"max_health": 100,
 	"health_regen": 0.2,
-	"scale_multiplier": 5,
+	"scale_multiplier": 2,
 	"life_span": 10,
 	"time_alive": 0
 }
