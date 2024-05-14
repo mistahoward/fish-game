@@ -7,7 +7,7 @@ var fish_1 = {
 	"id": 1,
 	"name": "fishy-boi",
 	"sprite": load("res://assets/fish-1.png"),
-	"move_speed": 1,
+	"move_speed": 10,
 	"value": 100,
 	"price": 100,
 	"max_hunger": 100,

@@ -31,6 +31,8 @@ func _physics_process(delta: float) -> void:
 	current_state.physics_update(delta)
 
 func enter_state_and_cleanup(new_state: State) -> void:
+	if new_state == current_state: return
+	if current_state is FishDeath: return
 	if current_state: current_state.exit()
 	new_state.enter()
 	current_state = new_state

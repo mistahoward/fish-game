@@ -6,12 +6,24 @@ signal velocity_update
 var _fish: Fish
 var _move_direction: Vector2
 
-var _shader_material: Material
+var _gray_shader: Material
 
-func _init(affected_fish: Fish) -> void:
-	_shader_material = load("res://assets/GrayScale_Material.tres")
+var fade_initiated: bool = false
+var local_ref: Signal
+
+func _init(affected_fish: Fish, signal_ref: Signal) -> void:
+	local_ref = signal_ref
+	local_ref.connect(fade_fish_sprite)
+	_gray_shader = load("res://assets/GrayScale_Material.tres")
 	_fish = affected_fish
 	self.name = "FishDeathState"
+
+func fade_fish_sprite() -> void:
+	if (fade_initiated): return
+	print("fade initiated")
+	var tween = create_tween()
+	tween.tween_property(_fish._sprite, "modulate:a", 0.0, 1)
+	fade_initiated = true
 
 func flip_fish() -> void:
 	_fish._sprite.flip_v = true
@@ -26,7 +38,7 @@ func kill_fish() -> void:
 	_fish.queue_free()
 
 func grayscale_sprite() -> void:
-	_fish._sprite.material = _shader_material
+	_fish._sprite.material = _gray_shader
 
 func handle_sprite() -> void:
 	flip_fish()
