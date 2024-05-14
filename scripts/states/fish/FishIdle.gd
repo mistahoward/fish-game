@@ -9,6 +9,7 @@ var _move_speed: float
 
 func _init(move_speed = 10) -> void:
 	_move_speed = move_speed
+	self.name = "FishIdleState"
 
 func randomize_wander() -> void:
 	move_direction = Vector2(randf_range(-1, 1), randf_range(-1, 1)).normalized()

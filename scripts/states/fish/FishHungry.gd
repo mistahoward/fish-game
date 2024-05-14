@@ -21,6 +21,7 @@ func _init(hunger_area, move_speed = 10) -> void:
 	_hunger_area = hunger_area
 	_initial_move_speed = move_speed
 	_move_speed = move_speed
+	self.name = "FishHungryState"
 
 func panic_from_hunger() -> void:
 	print("PANIC FROM HUNGER MODE ACTIVE")

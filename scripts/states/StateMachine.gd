@@ -11,6 +11,7 @@ func _init(possible_states: Array[State] = [], initial_state: State = null) -> v
 		state.Transitioned.connect(on_child_transition)
 		add_child(state)
 	_initial_state = initial_state
+	self.name = "StateMachine"
 
 func _ready() -> void:
 	if _initial_state:

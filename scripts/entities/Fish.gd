@@ -64,6 +64,14 @@ func _init(details: FishDetails) -> void:
 	_hunger_detection_area.monitoring = false
 	_hunger_detection_area.add_child(collision_shape)
 
+	var _collision_body_shape = CircleShape2D.new()
+	_collision_body_shape.radius = self._sprite.texture.get_height() / 2.4
+	var _collision_shape_object = CollisionShape2D.new()
+	_collision_shape_object.shape = _collision_body_shape
+	self.collision_layer = 1
+	self.collision_mask = 2
+	add_child(_collision_shape_object)
+
 func _ready() -> void:
 	add_child(_sprite)
 	add_child(_hunger_icon)
@@ -91,7 +99,6 @@ func _ready() -> void:
 
 	for state in _possible_states:
 		state.velocity_update.connect(func(vector2): update_position(vector2))
-
 
 func update_position(new_position: Vector2):
 	velocity = new_position * _move_speed

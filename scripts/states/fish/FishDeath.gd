@@ -11,6 +11,7 @@ var _shader_material: Material
 func _init(affected_fish: Fish) -> void:
 	_shader_material = load("res://assets/GrayScale_Material.tres")
 	_fish = affected_fish
+	self.name = "FishDeathState"
 
 func flip_fish() -> void:
 	_fish._sprite.flip_v = true

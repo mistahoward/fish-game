@@ -18,6 +18,7 @@ func _init(max_hunger: int = HungerDefaults.MAX, decay: float = HungerDefaults.D
 	_current_hunger = max_hunger
 	_max_hunger = max_hunger
 	_hunger_decay = decay
+	self.name = "HungerComponent"
 
 func _death_check() -> void:
 	if _hunger_percentage > 0: return

@@ -12,6 +12,7 @@ func _init(max_health: int = HealthDefaults.MAX, regen: float = HealthDefaults.R
 	_current_health = max_health
 	_health_regen = regen
 	_max_health = max_health
+	self.name = "HealthComponent"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
