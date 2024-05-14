@@ -12,7 +12,7 @@ func _init(move_speed = 10) -> void:
 	self.name = "FishIdleState"
 
 func randomize_wander() -> void:
-	move_direction = Vector2(randf_range(-1, 1), randf_range(-1, 1)).normalized()
+	move_direction = Vector2(randf_range(-1, 1), randf_range(0, 1)).normalized()
 	wander_time = randf_range(1, 3)
 
 func enter() -> void:

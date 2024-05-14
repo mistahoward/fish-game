@@ -10,7 +10,7 @@ var _death_state: State
 
 var _possible_states: Array[State]
 
-var _move_speed = 10
+var _move_speed = 20
 var _sprite: Sprite2D
 var _name: String
 var _id: int
@@ -29,6 +29,9 @@ var _hunger_detection_area: Area2D
 var _hunger_icon: Sprite2D
 
 var _time_elapsed: float = 0.0
+var _collision_shape_object: CollisionShape2D
+
+signal update_direction
 
 func _init(details: FishDetails) -> void:
 	_id = details.id
@@ -66,7 +69,7 @@ func _init(details: FishDetails) -> void:
 
 	var _collision_body_shape = CircleShape2D.new()
 	_collision_body_shape.radius = self._sprite.texture.get_height() / 2.4
-	var _collision_shape_object = CollisionShape2D.new()
+	_collision_shape_object = CollisionShape2D.new()
 	_collision_shape_object.shape = _collision_body_shape
 	self.collision_layer = 1
 	self.collision_mask = 2
@@ -88,7 +91,7 @@ func _ready() -> void:
 	_possible_states.push_front(_hunger_state)
 	_possible_states.push_front(_death_state)
 
-	_state_machine = StateMachine.new(_possible_states, _idle_state)
+	_state_machine = StateMachine.new(update_direction, _possible_states, _idle_state)
 
 	add_child(_healthComponent)
 	add_child(_hungerComponent)
@@ -104,12 +107,27 @@ func update_position(new_position: Vector2):
 	velocity = new_position * _move_speed
 
 func _physics_process(_delta: float) -> void:
-	move_and_slide()
-
+	var collision: bool = move_and_slide()
 	if velocity.x < 0:
 		_sprite.flip_h = false
 	else:
 		_sprite.flip_h = true
+	if !collision && self._state_machine.current_state != FishDeath: return
+	var latest_collision: = get_last_slide_collision()
+	var collider: = latest_collision.get_collider()
+	# check if background / tile map has been hit, meaning the ground
+	if collider is TileMap:
+		update_direction.emit(Vector2(velocity.x, randf_range(-1, 0)))
+	if collider is StaticBody2D:
+		if collider.name.begins_with("Top"):
+			print("HIT THE TOP OF TANK")
+			# update_direction.emit(Vector2(velocity.x, randf_range(0, 1)))
+		if collider.name.begins_with("Left"):
+			print("HIT THE LEFT OF THE TANK")
+			# update_direction.emit(Vector2(velocity.x * 1, velocity.y))
+		if collider.name.begins_with("Right"):
+			print("HIT THE RIGHT OF THE TANK")
+			# update_direction.emit(Vector2(velocity.x * -1, velocity.y))
 
 func _process(delta: float) -> void:
 	if _time_alive >= _life_span: print("die fish")
