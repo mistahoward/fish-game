@@ -21,6 +21,8 @@ var _max_hunger: int = 100
 var _hunger_decay: float = 0.5
 var _health_regen: float = 0.2
 
+var _animated_sprite: AnimatedSprite2D
+
 var _scale_mutliplier: float = 5.0
 var _life_span: int = 10 # dev value
 var _time_alive: int = 0 # dev value
@@ -61,9 +63,17 @@ func _init(details: FishDetails) -> void:
 	_defense = details.defense
 	_unlocked = details.unlocked
 
-	_sprite = Sprite2D.new()
-	_sprite.texture = details.sprite
+	var sprite_sheet = Sprite2D.new()
+	sprite_sheet.texture = details.sprite
+	sprite_sheet.region_enabled = true
+	_sprite = GameManager.get_coordinates_from_sheet(sprite_sheet, Rect2(0,0,32,32))
 	_sprite.scale = Vector2(_scale_mutliplier, _scale_mutliplier)
+
+	_animated_sprite = AnimatedSprite2D.new()
+	var sprite_frames: SpriteFrames = SpriteFrames.new()
+	# sprite_frames.resource_path
+
+	_animated_sprite.sprite_frames = sprite_frames
 
 	_hunger_icon = Sprite2D.new()
 	_hunger_icon.texture = load("res://assets/icons/hunger.png")

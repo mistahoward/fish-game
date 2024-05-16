@@ -11,6 +11,12 @@ enum FishType {
 
 signal click
 
+func get_coordinates_from_sheet(sheet: Sprite2D, coordinates: Rect2) -> Sprite2D:
+	var working_sheet: Sprite2D = sheet.duplicate()
+	working_sheet.region_enabled = true
+	working_sheet.region_rect = coordinates
+	return working_sheet
+
 func _init() -> void:
 	self.name = "GameManager"
 	self.unique_name_in_owner = true

@@ -45,5 +45,4 @@ collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Right_of_Tank"]
 rotation = -0.323728
-scale = Vector2(1, 1)
 shape = SubResource("SegmentShape2D_7t1in")
