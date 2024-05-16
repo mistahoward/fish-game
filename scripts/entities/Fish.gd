@@ -31,6 +31,14 @@ var _hunger_icon: Sprite2D
 var _time_elapsed: float = 0.0
 var _collision_shape_object: CollisionShape2D
 
+var _unlocked: bool = false
+
+var _hunger_needed_until_next_stage: int = -1
+
+var _strength: int = -1
+var _defense: int = -1
+var _type: GameManager.FishType = GameManager.FishType.PRODUCER
+
 signal update_direction
 signal collided_with_bottom_of_tank
 
@@ -47,6 +55,11 @@ func _init(details: FishDetails) -> void:
 	_life_span = details.life_span
 	_time_alive = details.time_alive
 	_move_speed = details.move_speed
+	_hunger_needed_until_next_stage = details.hunger_needed_until_next_stage
+	_type = GameManager.FishType[details.type]
+	_strength = details.strength
+	_defense = details.defense
+	_unlocked = details.unlocked
 
 	_sprite = Sprite2D.new()
 	_sprite.texture = details.sprite
@@ -56,18 +69,6 @@ func _init(details: FishDetails) -> void:
 	_hunger_icon.texture = load("res://assets/icons/hunger.png")
 	_hunger_icon.position.x = self.position.x + (_sprite.texture.get_width() / 4)
 	_hunger_icon.position.y = self.position.y - _sprite.texture.get_height() - (_sprite.texture.get_height() / 4)
-
-	var hunger_shape = CircleShape2D.new()
-	hunger_shape.radius = details.hunger_radius
-	var collision_shape = CollisionShape2D.new()
-	collision_shape.disabled = true
-	collision_shape.shape = hunger_shape
-	_hunger_detection_area = Area2D.new()
-	_hunger_detection_area.position.x = self.position.x
-	_hunger_detection_area.position.y = self.position.y
-	_hunger_detection_area.monitorable = true
-	_hunger_detection_area.monitoring = false
-	_hunger_detection_area.add_child(collision_shape)
 
 	var _collision_body_shape = CircleShape2D.new()
 	_collision_body_shape.radius = self._sprite.texture.get_height() / 2.4
@@ -85,7 +86,7 @@ func _ready() -> void:
 	_healthComponent = HealthComponent.new(_max_health, _health_regen)
 	_hungerComponent = HungerComponent.new(_max_hunger, _hunger_decay)
 
-	_hunger_state = FishHungry.new(_hunger_detection_area, _move_speed)
+	_hunger_state = FishHungry.new(_move_speed)
 	_idle_state = FishIdle.new(_move_speed)
 	_death_state = FishDeath.new(self, collided_with_bottom_of_tank)
 

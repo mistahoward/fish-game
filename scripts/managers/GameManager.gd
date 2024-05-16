@@ -3,6 +3,12 @@ extends Node
 var _input_manager: InputManager
 var _scene_manager: SceneManager
 
+enum FishType {
+	PRODUCER,
+	ATTACKER,
+	DEFENDER
+}
+
 signal click
 
 func _init() -> void:

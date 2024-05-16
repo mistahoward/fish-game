@@ -11,13 +11,18 @@ var fish_1 = {
 	"value": 100,
 	"price": 100,
 	"max_hunger": 100,
-	"hunger_radius": 100,
 	"hunger_decay": 10, # dev decay
 	"max_health": 100,
 	"health_regen": 0.2,
 	"scale_multiplier": 2,
 	"life_span": 10,
-	"time_alive": 0
+	"time_alive": 0,
+	"type": "PRODUCER",
+	"strength": 0,
+	"defense": 0,
+	"hunger_needed_until_next_stage": 0,
+	"unlocked": true,
+	"number_of_life_stages": 3,
 }
 
 func _init() -> void:

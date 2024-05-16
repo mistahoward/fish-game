@@ -1,11 +1,5 @@
 class_name FishDetails
 
-enum FishType {
-	Producer,
-	Attacker,
-	Defender
-}
-
 var id: int
 var name: String
 var sprite: Resource
@@ -17,7 +11,7 @@ var hunger_decay: float
 var hunger_radius: float
 var max_health: int
 var health_regen: float
-var type: FishType
+var type: String
 var unlocked: bool
 
 var scale_multiplier: float
@@ -27,3 +21,6 @@ var defense: int
 
 var time_alive: int # in seconds
 var life_span: int # in seconds
+
+var hunger_needed_until_next_stage: int
+var number_of_life_stages: int
