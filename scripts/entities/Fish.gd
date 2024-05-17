@@ -10,7 +10,7 @@ var _death_state: FishDeath
 
 var _possible_states: Array[State]
 
-var _move_speed = 10
+var _move_speed: int = 10
 var _sprite: Sprite2D
 var _name: String
 var _id: int
@@ -20,8 +20,6 @@ var _max_health: int = 100
 var _max_hunger: int = 100
 var _hunger_decay: float = 0.5
 var _health_regen: float = 0.2
-
-var _animated_sprite: AnimatedSprite2D
 
 var _scale_mutliplier: float = 5.0
 var _life_span: int = 10 # dev value
@@ -44,6 +42,8 @@ var _type: GameManager.FishType = GameManager.FishType.PRODUCER
 signal update_direction
 signal collided_with_bottom_of_tank
 
+var animated_sprite: AnimatedSprite2D
+
 func _init(details: FishDetails) -> void:
 	_id = details.id
 	_name = details.name
@@ -63,17 +63,19 @@ func _init(details: FishDetails) -> void:
 	_defense = details.defense
 	_unlocked = details.unlocked
 
-	var sprite_sheet = Sprite2D.new()
-	sprite_sheet.texture = details.sprite
-	sprite_sheet.region_enabled = true
-	_sprite = GameManager.get_coordinates_from_sheet(sprite_sheet, Rect2(0,0,32,32))
+	var parent_node: Node = details.sprite.instantiate()
+	var sprite_sheet: AnimatedSprite2D = parent_node.find_child("Animations")
+	var individual_sprite: Sprite2D = parent_node.find_child("Sprite")
+	individual_sprite.reparent(self)
+	_sprite = individual_sprite
+	animated_sprite = sprite_sheet
+	animated_sprite.reparent(self)
+	parent_node.queue_free()
+
 	_sprite.scale = Vector2(_scale_mutliplier, _scale_mutliplier)
-
-	_animated_sprite = AnimatedSprite2D.new()
-	var sprite_frames: SpriteFrames = SpriteFrames.new()
-	# sprite_frames.resource_path
-
-	_animated_sprite.sprite_frames = sprite_frames
+	_sprite.visible = false
+	animated_sprite.scale = Vector2(_scale_mutliplier, _scale_mutliplier)
+	animated_sprite.play("swim")
 
 	_hunger_icon = Sprite2D.new()
 	_hunger_icon.texture = load("res://assets/icons/hunger.png")
@@ -89,7 +91,7 @@ func _init(details: FishDetails) -> void:
 	add_child(_collision_shape_object)
 
 func _ready() -> void:
-	add_child(_sprite)
+	add_child(animated_sprite)
 	add_child(_hunger_icon)
 	add_child(_hunger_detection_area)
 
@@ -122,9 +124,9 @@ func update_position(new_position: Vector2):
 func _physics_process(_delta: float) -> void:
 	var collision: bool = move_and_slide()
 	if velocity.x < 0:
-		_sprite.flip_h = false
+		animated_sprite.flip_h = false
 	else:
-		_sprite.flip_h = true
+		animated_sprite.flip_h = true
 	if !collision && self._state_machine.current_state != FishDeath: return
 	var latest_collision: = get_last_slide_collision()
 	var collider: = latest_collision.get_collider()
@@ -154,7 +156,7 @@ func die() -> void:
 	_hunger_icon.visible = false
 	_state_machine.enter_state_and_cleanup(_death_state)
 
-func handle_hunger(color, display_icon: bool) -> void:
+func handle_hunger(color: Color, display_icon: bool) -> void:
 	if display_icon && _state_machine.current_state != _hunger_state: _state_machine.enter_state_and_cleanup(_hunger_state)
 	_hunger_icon.modulate = color
 	_hunger_icon.visible = display_icon

@@ -25,8 +25,13 @@ func fade_fish_sprite() -> void:
 	tween.tween_property(_fish._sprite, "modulate:a", 0.0, 1)
 	fade_initiated = true
 
-func flip_fish() -> void:
+func set_sprite_and_flip() -> void:
 	_fish._sprite.flip_v = true
+	_fish.animated_sprite.stop()
+	if _fish.animated_sprite.flip_h:
+		_fish._sprite.flip_h = true
+	_fish.animated_sprite.visible = false
+	_fish._sprite.visible = true
 
 func sink_fish() -> void:
 	_move_direction = Vector2(0, 1)
@@ -41,7 +46,7 @@ func grayscale_sprite() -> void:
 	_fish._sprite.material = _gray_shader
 
 func handle_sprite() -> void:
-	flip_fish()
+	set_sprite_and_flip()
 	grayscale_sprite()
 
 func enter() -> void:

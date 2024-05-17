@@ -2,7 +2,7 @@ class_name FishDetails
 
 var id: int
 var name: String
-var sprite: Resource
+var sprite: PackedScene
 var move_speed: float
 var value: int
 var price: int

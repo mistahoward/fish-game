@@ -6,7 +6,7 @@ var fish_database: Dictionary = {}
 var fish_1 = {
 	"id": 1,
 	"name": "fishy-boi",
-	"sprite": preload("res://assets/fish-1.png"),
+	"sprite": preload("res://scenes/entities/fish_1.tscn"),
 	"move_speed": 10,
 	"value": 100,
 	"price": 100,

@@ -14,7 +14,7 @@ var _hunger_move_speed_modifier: float = 3.25
 func enter() -> void:
 	panic_from_hunger()
 
-func _init(move_speed = 10) -> void:
+func _init(move_speed: int = 10) -> void:
 	_initial_move_speed = move_speed
 	_move_speed = move_speed
 	self.name = "FishHungryState"
