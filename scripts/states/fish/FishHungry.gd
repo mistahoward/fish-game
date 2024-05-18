@@ -59,7 +59,7 @@ func physics_update(_delta: float) -> void:
 	for food in available_food:
 		if !nearest_food:
 			nearest_food = food
-			continue
+			break
 		var nearest_food_pos = nearest_food.distance_to(_fish)
 		var current_food = food.distance_to(_fish)
 		if current_food > nearest_food_pos: return
