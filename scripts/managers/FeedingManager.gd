@@ -17,11 +17,11 @@ var food_1: Dictionary = {
 }
 
 var allowed_foods: int = 1
-var spawned_foods: int = 0
+var spawned_food_amount: int = 0
 var highest_unlocked_food_id: int = 1
 
 func decrement_spawned_food() -> void:
-	spawned_foods =- 1
+	spawned_food_amount =- 1
 
 func updated_highest_unlocked_food() -> void:
 	pass
@@ -53,11 +53,11 @@ func create_food(id: int) -> Food:
 	return Food.new(food_details, decrement_spawned_food)
 
 func handle_click(location: Vector2) -> void:
-	if allowed_foods <= spawned_foods: return
+	if allowed_foods <= spawned_food_amount: return
 	var working_food = create_food(1)
 	working_food.position.x = location.x
 	working_food.position.y = location.y
-	spawned_foods += 1
+	spawned_food_amount += 1
 	add_child(working_food)
 	print("creating food")
 

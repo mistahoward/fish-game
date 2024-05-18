@@ -10,7 +10,7 @@ var _death_state: FishDeath
 
 var _possible_states: Array[State]
 
-var _move_speed: int = 10
+var _move_speed: float = 10
 var _sprite: Sprite2D
 var _name: String
 var _id: int
@@ -99,7 +99,7 @@ func _ready() -> void:
 	_healthComponent = HealthComponent.new(_max_health, _health_regen)
 	_hungerComponent = HungerComponent.new(_max_hunger, _hunger_decay)
 
-	_hunger_state = FishHungry.new(_move_speed)
+	_hunger_state = FishHungry.new(self)
 	_idle_state = FishIdle.new(_move_speed)
 	_death_state = FishDeath.new(self, collided_with_bottom_of_tank)
 
@@ -147,6 +147,7 @@ func _physics_process(_delta: float) -> void:
 			print("HIT THE RIGHT OF THE TANK")
 			update_direction.emit(Vector2(sin(randf_range(-1,0)), sin(velocity.y)))
 
+
 func _process(delta: float) -> void:
 	_time_elapsed += delta
 	if _time_elapsed >= 1:
@@ -161,3 +162,6 @@ func handle_hunger(color: Color, display_icon: bool) -> void:
 	if display_icon && _state_machine.current_state != _hunger_state: _state_machine.enter_state_and_cleanup(_hunger_state)
 	_hunger_icon.modulate = color
 	_hunger_icon.visible = display_icon
+
+func handle_idle() -> void:
+	_state_machine.enter_state_and_cleanup(_idle_state)

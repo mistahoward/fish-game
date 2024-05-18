@@ -20,6 +20,9 @@ func _init(max_hunger: int = HungerDefaults.MAX, decay: float = HungerDefaults.D
 	_hunger_decay = decay
 	self.name = "HungerComponent"
 
+func _update_hunger(value: int) -> void:
+	_current_hunger += value
+
 func _death_check() -> void:
 	if _hunger_percentage > 0: return
 	hunger_depleted.emit()

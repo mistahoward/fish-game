@@ -32,18 +32,27 @@ func _init(details: FoodDetails, decrement_function: Callable) -> void:
 	_price = details.price
 	unlocked = details.unlocked
 
+	self.collision_layer = 2
+	self.collision_mask = 1
+
 	handle_decrement = decrement_function
 
 	var _collision_body_shape = CircleShape2D.new()
 	_collision_body_shape.radius = self._sprite.texture.get_height() / 3
 	_collision_shape_object = CollisionShape2D.new()
 	_collision_shape_object.shape = _collision_body_shape
+	_collision_shape_object.name = "food"
 	self.collision_layer = 1
 	self.collision_mask = 2
 	add_child(_collision_shape_object)
 
 func _ready() -> void:
 	add_child(_sprite)
+
+func consumed() -> void:
+	# play break animation
+	handle_decrement.call()
+	queue_free()
 
 func fade_away() -> void:
 	if (fade_initiated): return
@@ -56,9 +65,8 @@ func fade_away() -> void:
 
 func _physics_process(delta: float) -> void:
 	var collision_list: Array[Node2D] = get_overlapping_bodies()
-	if collision_list.size() <= 0: 
+	if collision_list.size() <= 0:
 		self.position.y = self.position.y - _sink_speed * delta * sink_direction
 		return
-	var collided_with_bottom_of_tank = collision_list.find(StaticBody2D)
+	var collided_with_bottom_of_tank: int = collision_list.find(StaticBody2D)
 	if collided_with_bottom_of_tank: fade_away()
-	

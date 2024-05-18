@@ -14,6 +14,7 @@ offset_left = 85.0
 offset_top = 8.0
 offset_right = 165.0
 offset_bottom = 41.0
+rotation = -0.00137089
 theme_override_fonts/font = ExtResource("1_0bsse")
 text = "0"
 
@@ -25,3 +26,32 @@ offset_right = 106.0
 offset_bottom = 41.0
 theme_override_fonts/font = ExtResource("1_0bsse")
 text = "Gold:"
+
+[node name="WaveInformation" type="Node" parent="."]
+
+[node name="WaveNumber" type="Label" parent="WaveInformation"]
+z_index = 5
+offset_left = 93.0
+offset_top = 41.0
+offset_right = 171.0
+offset_bottom = 71.0
+theme_override_fonts/font = ExtResource("1_0bsse")
+text = "0"
+
+[node name="WaveLabel" type="Label" parent="WaveInformation"]
+z_index = 5
+offset_left = 8.0
+offset_top = 41.0
+offset_right = 48.0
+offset_bottom = 64.0
+theme_override_fonts/font = ExtResource("1_0bsse")
+text = "Wave:"
+
+[node name="WaveTimer" type="Label" parent="WaveInformation"]
+z_index = 5
+offset_left = 14.0
+offset_top = 74.0
+offset_right = 54.0
+offset_bottom = 104.0
+theme_override_fonts/font = ExtResource("1_0bsse")
+text = "0"

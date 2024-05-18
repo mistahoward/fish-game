@@ -4,44 +4,68 @@ class_name FishHungry
 signal velocity_update
 
 var _move_speed: float = 10
-var _initial_move_speed: float = 10
 var move_direction: Vector2
-var _wander_time: float
-var _near_food: bool = false
 
-var _hunger_move_speed_modifier: float = 3.25
+var found_food: bool = false
+
+var _fish: Fish
+
+var chased_food: Food
+
+var _eat_range: Area2D
 
 func enter() -> void:
-	panic_from_hunger()
+	var _eat_range_shape = CircleShape2D.new()
+	_eat_range = Area2D.new()
+	_eat_range_shape.radius = _fish._sprite.texture.get_height() / 2
+	var _eat_range_collision: CollisionShape2D = CollisionShape2D.new()
+	_eat_range_collision.shape = _eat_range_shape
+	_eat_range.add_child(_eat_range_collision)
+	var debug_color = Color.RED
+	debug_color.a = 0.2
+	_eat_range_collision.debug_color = debug_color
+	_fish.add_child(_eat_range)
+	_eat_range.area_entered.connect(func (node: Node2D): body_entered(node))
 
-func _init(move_speed: int = 10) -> void:
-	_initial_move_speed = move_speed
-	_move_speed = move_speed
+func body_entered(node_entered: Node2D):
+	if !node_entered is Food: return
+	var working_food: Food = node_entered
+	_fish._hungerComponent._update_hunger(working_food._hunger_to_restore)
+	working_food.consumed()
+	_fish.handle_idle()
+
+func _init(fish: Fish) -> void:
+	_move_speed = fish._move_speed
 	self.name = "FishHungryState"
 
-func panic_from_hunger() -> void:
-	print("PANIC FROM HUNGER MODE ACTIVE")
-	# _move_speed = _move_speed * _hunger_move_speed_modifier
+	_fish = fish
 
-func randomize_wander() -> void:
-	move_direction = Vector2(randf_range(-1, 1), randf_range(-1, 1)).normalized()
-	_wander_time = 50
-
-func chase_food(arg1) -> void:
-	print(arg1)
-	pass
+func chase_food(food_to_chase: Food, delta: float) -> void:
+	if found_food:
+		var direction: Vector2 = (food_to_chase.position - _fish.position).normalized()
+		velocity_update.emit(direction * _move_speed)
+	found_food = true
 
 func update(delta: float) -> void:
-	if _near_food:
-		pass
-		# chase_food()
-	else:
-		if _wander_time > 0:
-			_wander_time -= delta
-		else: randomize_wander()
+	pass
 
 func physics_update(_delta: float) -> void:
-	velocity_update.emit(move_direction * _move_speed)
+	var available_food: Array[Node] = GameManager._scene_manager._feeding_manager.get_children()
+	if available_food.size() <= 0:
+		print("no more foods :(")
+		found_food = false
+	var nearest_food: Food
+	for food: Food in available_food:
+		if !nearest_food:
+			nearest_food = food
+			continue
+		var nearest_food_pos = nearest_food.distance_to(_fish)
+		var current_food = food.distance_to(_fish)
+		if current_food > nearest_food_pos: return
+		nearest_food = current_food
+	if !nearest_food: return
+	chase_food(nearest_food, _delta)
 
 func exit() -> void:
-	_move_speed = _initial_move_speed
+	_fish.remove_child(_eat_range)
+	_fish._hunger_icon.visible = false
