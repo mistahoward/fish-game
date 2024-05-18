@@ -204,9 +204,10 @@ func handle_life_stage_up() -> void:
 	var new_scale = Vector2(new_multiplier, new_multiplier)
 	print("new scale:")
 	print(new_scale)
-	tween.tween_property(animated_sprite, "scale", new_scale * 1.2,  1)
-	# await tween.finished
-	# tween.tween_property(animated_sprite, "scale", new_scale, 0.5)
+	tween.tween_property(animated_sprite, "scale", new_scale * 1.5,  1)
+	tween.finished.connect(func(): tween.tween_property(animated_sprite, "scale", new_scale * 0.8, 0.5))
+	tween.finished.connect(func(): tween.tween_property(animated_sprite, "scale", new_scale, 0.5))
+	
 
 func handle_chomp(hunger_restored: int) -> void:
 	animated_sprite.play("chomp")
