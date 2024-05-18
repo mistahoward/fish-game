@@ -24,6 +24,8 @@ func fade_fish_sprite() -> void:
 	var tween = create_tween()
 	tween.tween_property(_fish._sprite, "modulate:a", 0.0, 1)
 	fade_initiated = true
+	await get_tree().create_timer(1).timeout
+	kill_fish()
 
 func set_sprite_and_flip() -> void:
 	_fish._sprite.flip_v = true
@@ -55,6 +57,8 @@ func enter() -> void:
 	handle_sprite()
 	sink_fish()
 	await get_tree().create_timer(3).timeout
+	fade_fish_sprite()
+	await get_tree().create_timer(1).timeout
 	kill_fish()
 
 func update(delta: float) -> void:

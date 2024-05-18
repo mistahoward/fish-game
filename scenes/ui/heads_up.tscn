@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjfhnuprdnwwx"]
+
+[ext_resource type="FontFile" uid="uid://i2ey78nmgsa3" path="res://assets/Tomorrow_Night.ttf" id="1_0bsse"]
+
+[node name="HeadsUp" type="Node2D"]
+top_level = true
+z_index = 10
+
+[node name="Resources" type="Node" parent="."]
+
+[node name="GoldAmount" type="Label" parent="Resources"]
+z_index = 5
+offset_left = 85.0
+offset_top = 8.0
+offset_right = 165.0
+offset_bottom = 41.0
+theme_override_fonts/font = ExtResource("1_0bsse")
+text = "0"
+
+[node name="GoldLabel" type="Label" parent="Resources"]
+z_index = 5
+offset_left = 9.0
+offset_top = 8.0
+offset_right = 106.0
+offset_bottom = 41.0
+theme_override_fonts/font = ExtResource("1_0bsse")
+text = "Gold:"

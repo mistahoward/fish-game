@@ -81,6 +81,7 @@ func _init(details: FishDetails) -> void:
 	_hunger_icon.texture = load("res://assets/icons/hunger.png")
 	_hunger_icon.position.x = self.position.x + (_sprite.texture.get_width() / 4)
 	_hunger_icon.position.y = self.position.y - _sprite.texture.get_height() - (_sprite.texture.get_height() / 4)
+	_hunger_icon.scale = Vector2(0.8, 0.8)
 
 	var _collision_body_shape = CircleShape2D.new()
 	_collision_body_shape.radius = self._sprite.texture.get_height() / 2.4

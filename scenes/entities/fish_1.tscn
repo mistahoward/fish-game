@@ -122,7 +122,7 @@ region = Rect2(32, 2.08165e-12, 32, 32)
 [node name="Animations" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_xigix")
 animation = &"swim"
-frame_progress = 0.0237756
+frame_progress = 0.548762
 speed_scale = 5.0
 
 [node name="Sprite" type="Sprite2D" parent="."]
