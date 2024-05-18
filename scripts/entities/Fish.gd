@@ -207,7 +207,7 @@ func handle_life_stage_up() -> void:
 	tween.tween_property(animated_sprite, "scale", new_scale * 1.5,  1)
 	tween.finished.connect(func(): tween.tween_property(animated_sprite, "scale", new_scale * 0.8, 0.5))
 	tween.finished.connect(func(): tween.tween_property(animated_sprite, "scale", new_scale, 0.5))
-	
+
 
 func handle_chomp(hunger_restored: int) -> void:
 	animated_sprite.play("chomp")

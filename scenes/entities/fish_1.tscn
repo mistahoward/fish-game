@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://c24fkiy4keqwh"]
+[gd_scene load_steps=21 format=3 uid="uid://c24fkiy4keqwh"]
 
 [ext_resource type="Texture2D" uid="uid://b0275wtm3wn62" path="res://assets/fish-1.png" id="1_xqrub"]
 
@@ -41,14 +41,6 @@ region = Rect2(96, 0, 32, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_qqmos"]
 atlas = ExtResource("1_xqrub")
 region = Rect2(128, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_qilg6"]
-atlas = ExtResource("1_xqrub")
-region = Rect2(160, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d343g"]
-atlas = ExtResource("1_xqrub")
-region = Rect2(192, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mpr0b"]
 atlas = ExtResource("1_xqrub")
@@ -115,16 +107,10 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_qqmos")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_qilg6")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d343g")
 }],
 "loop": true,
 "name": &"swim",
-"speed": 5.0
+"speed": 1.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -161,7 +147,7 @@ region = Rect2(32, 2.08165e-12, 32, 32)
 
 [node name="Animations" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_xigix")
-animation = &"turn"
+animation = &"swim"
 speed_scale = 5.0
 
 [node name="Sprite" type="Sprite2D" parent="."]
