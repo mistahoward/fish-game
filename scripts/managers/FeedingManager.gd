@@ -22,6 +22,8 @@ var highest_unlocked_food_id: int = 1
 
 func decrement_spawned_food() -> void:
 	spawned_food_amount =- 1
+	if spawned_food_amount < 0:
+		spawned_food_amount = 0
 
 func updated_highest_unlocked_food() -> void:
 	pass

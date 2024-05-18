@@ -96,7 +96,7 @@ func _init(details: FishDetails) -> void:
 	_hunger_icon.texture = load("res://assets/icons/hunger.png")
 	_hunger_icon.position.x = self.position.x + (_sprite.texture.get_width() / 4)
 	_hunger_icon.position.y = self.position.y - _sprite.texture.get_height() - (_sprite.texture.get_height() / 4)
-	_hunger_icon.scale = Vector2(0.8, 0.8)
+	_hunger_icon.scale = Vector2(current_scale_multiplier * 0.8, current_scale_multiplier * 0.8)
 
 	var _collision_body_shape = CircleShape2D.new()
 	_collision_body_shape.radius = self._sprite.texture.get_height() / 2.4
@@ -197,21 +197,20 @@ func handle_idle() -> void:
 
 func handle_life_stage_up() -> void:
 	if current_life_stage >= number_of_life_stages: return
-	print("LIFE STAGE UP BABYYYYY")
 	current_life_stage += 1
 	var tween: Tween = create_tween()
 	var new_multiplier = (_base_scale_multiplier / number_of_life_stages) * (current_life_stage * 1.25)
+	current_scale_multiplier = new_multiplier
 	var new_scale = Vector2(new_multiplier, new_multiplier)
-	print("new scale:")
-	print(new_scale)
 	tween.tween_property(animated_sprite, "scale", new_scale * 1.5,  1)
 	tween.finished.connect(func(): tween.tween_property(animated_sprite, "scale", new_scale * 0.8, 0.5))
 	tween.finished.connect(func(): tween.tween_property(animated_sprite, "scale", new_scale, 0.5))
-
+	tween.tween_property(_hunger_icon, "scale", new_scale * 0.4, 1)
+	_hunger_icon.position.y = _hunger_icon.position.y * (new_multiplier / 2)
+	_sprite.scale = new_scale
 
 func handle_chomp(hunger_restored: int) -> void:
 	animated_sprite.play("chomp")
 	animated_sprite.animation_finished.connect(func(): animated_sprite.play("swim"))
 	self._hunger_needed_until_next_stage -= hunger_restored
-	if _hunger_needed_until_next_stage <= 0:
-		handle_life_stage_up()
+	if _hunger_needed_until_next_stage <= 0: handle_life_stage_up()
