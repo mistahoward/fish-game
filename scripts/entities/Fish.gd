@@ -21,7 +21,7 @@ var _max_hunger: int = 100
 var _hunger_decay: float = 0.5
 var _health_regen: float = 0.2
 
-var _scale_mutliplier: float = 5.0
+var _base_scale_multiplier: float = 5.0
 var _life_span: int = 10 # dev value
 var _time_alive: int = 0 # dev value
 
@@ -44,6 +44,17 @@ signal collided_with_bottom_of_tank
 
 var animated_sprite: AnimatedSprite2D
 
+var number_of_life_stages: int = 3
+var current_scale_multipplier: float
+var current_life_stage: int = 0
+
+enum Direction {
+	LEFT,
+	RIGHT
+}
+
+var facing_direction: Direction = Direction.LEFT
+
 func _init(details: FishDetails) -> void:
 	_id = details.id
 	_name = details.name
@@ -53,7 +64,7 @@ func _init(details: FishDetails) -> void:
 	_max_hunger = details.max_hunger
 	_hunger_decay = details.hunger_decay
 	_health_regen = details.health_regen
-	_scale_mutliplier = details.scale_multiplier
+	_base_scale_multiplier = details.scale_multiplier
 	_life_span = details.life_span
 	_time_alive = details.time_alive
 	_move_speed = details.move_speed
@@ -62,6 +73,10 @@ func _init(details: FishDetails) -> void:
 	_strength = details.strength
 	_defense = details.defense
 	_unlocked = details.unlocked
+	number_of_life_stages = details.number_of_life_stages
+
+	current_life_stage = 0
+	current_scale_multipplier = _base_scale_multiplier / number_of_life_stages
 
 	var parent_node: Node = details.sprite.instantiate()
 	var sprite_sheet: AnimatedSprite2D = parent_node.find_child("Animations")
@@ -72,9 +87,9 @@ func _init(details: FishDetails) -> void:
 	animated_sprite.reparent(self)
 	parent_node.queue_free()
 
-	_sprite.scale = Vector2(_scale_mutliplier, _scale_mutliplier)
+	_sprite.scale = Vector2(_base_scale_multiplier, _base_scale_multiplier)
 	_sprite.visible = false
-	animated_sprite.scale = Vector2(_scale_mutliplier, _scale_mutliplier)
+	animated_sprite.scale = Vector2(_base_scale_multiplier, _base_scale_multiplier)
 	animated_sprite.play("swim")
 
 	_hunger_icon = Sprite2D.new()
@@ -119,15 +134,33 @@ func _ready() -> void:
 	for state in _possible_states:
 		state.velocity_update.connect(func(vector2): update_position(vector2))
 
-func update_position(new_position: Vector2):
+func update_position(new_position: Vector2) -> void:
 	velocity = new_position * _move_speed
+
+func handle_turn(new_value: bool) -> void:
+	animated_sprite.flip_h = new_value
+	animated_sprite.play("swim")
 
 func _physics_process(_delta: float) -> void:
 	var collision: bool = move_and_slide()
 	if velocity.x < 0:
-		animated_sprite.flip_h = false
+		if facing_direction == Direction.RIGHT:
+			if animated_sprite.animation == "chomp":
+				print("CHOMP PLAYING")
+				await animated_sprite.animation_finished
+				print("chomp finished - continuing")
+			animated_sprite.play("turn")
+			animated_sprite.animation_finished.connect(func(): handle_turn(false))
+			facing_direction = Direction.LEFT
 	else:
-		animated_sprite.flip_h = true
+		if facing_direction == Direction.LEFT:
+			if animated_sprite.animation == "chomp":
+				print("CHOMP PLAYING")
+				await animated_sprite.animation_finished
+				print("chomp finished - continuing")
+			animated_sprite.play("turn")
+			animated_sprite.animation_finished.connect(func(): handle_turn(true))
+			facing_direction = Direction.RIGHT
 	if !collision && self._state_machine.current_state != FishDeath: return
 	var latest_collision: = get_last_slide_collision()
 	var collider: = latest_collision.get_collider()
@@ -165,3 +198,7 @@ func handle_hunger(color: Color, display_icon: bool) -> void:
 
 func handle_idle() -> void:
 	_state_machine.enter_state_and_cleanup(_idle_state)
+
+func handle_chomp() -> void:
+	animated_sprite.play("chomp")
+	animated_sprite.animation_finished.connect(func(): animated_sprite.play("swim"))

@@ -30,6 +30,7 @@ func enter() -> void:
 func body_entered(node_entered: Node2D):
 	if !node_entered is Food: return
 	var working_food: Food = node_entered
+	_fish.handle_chomp()
 	_fish._hungerComponent._update_hunger(working_food._hunger_to_restore)
 	working_food.consumed()
 	_fish.handle_idle()

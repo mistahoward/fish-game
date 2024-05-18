@@ -14,7 +14,7 @@ var fish_1: Dictionary = {
 	"hunger_decay": 10, # dev decay
 	"max_health": 100,
 	"health_regen": 0.2,
-	"scale_multiplier": 2,
+	"scale_multiplier": 3,
 	"life_span": 10,
 	"time_alive": 0,
 	"type": "PRODUCER",
