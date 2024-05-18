@@ -2,10 +2,9 @@ class_name FoodDetails
 
 var id: int
 var name: String
-var sprite: Resource
+var sprite: Texture2D
 var sink_speed: float
-var time_to_disappear: int # sec
 var hunger_to_restore: int
-var value: int
+var value: float
 var price: int
 var unlocked: bool

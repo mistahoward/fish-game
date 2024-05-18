@@ -20,4 +20,5 @@ func _process(delta: float) -> void:
 func _input(event):
    # Mouse in viewport coordinates.
 	if event is InputEventMouseButton:
-		_click.emit(event.position)
+		if event.pressed:
+			_click.emit(event.position)

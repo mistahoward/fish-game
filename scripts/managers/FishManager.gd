@@ -3,9 +3,9 @@ class_name FishManager
 
 var fish_database: Dictionary = {}
 
-var fish_1 = {
+var fish_1: Dictionary = {
 	"id": 1,
-	"name": "fishy-boi",
+	"name": "goldfish",
 	"sprite": preload("res://scenes/entities/fish_1.tscn"),
 	"move_speed": 10,
 	"value": 100,
@@ -25,10 +25,13 @@ var fish_1 = {
 	"number_of_life_stages": 3,
 }
 
-func _init() -> void:
+func load_fish_to_db() -> void:
 	fish_database[fish_1.id] = fish_1
 
-func get_fish_by_id(id) -> FishDetails:
+func _init() -> void:
+	load_fish_to_db()
+
+func get_fish_by_id(id: int) -> FishDetails:
 	var fishctionary: Dictionary = fish_database[id]
 	if !fishctionary: push_error("FISH DETAILS NOT FOUND BY ID")
 
