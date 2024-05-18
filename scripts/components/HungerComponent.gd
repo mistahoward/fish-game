@@ -14,7 +14,7 @@ var _max_hunger = HungerDefaults.MAX
 var _hunger_decay = HungerDefaults.DECAY
 var _hunger_percentage = HungerDefaults.PERCENTAGE
 
-func _init(max_hunger: int = HungerDefaults.MAX, decay: float = HungerDefaults.DECAY):
+func _init(max_hunger: int = HungerDefaults.MAX, decay: float = HungerDefaults.DECAY) -> void:
 	_current_hunger = max_hunger
 	_max_hunger = max_hunger
 	_hunger_decay = decay

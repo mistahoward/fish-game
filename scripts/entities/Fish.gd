@@ -45,8 +45,8 @@ signal collided_with_bottom_of_tank
 var animated_sprite: AnimatedSprite2D
 
 var number_of_life_stages: int = 3
-var current_scale_multipplier: float
-var current_life_stage: int = 0
+var current_scale_multiplier: float
+var current_life_stage: int = 1
 
 enum Direction {
 	LEFT,
@@ -75,8 +75,8 @@ func _init(details: FishDetails) -> void:
 	_unlocked = details.unlocked
 	number_of_life_stages = details.number_of_life_stages
 
-	current_life_stage = 0
-	current_scale_multipplier = _base_scale_multiplier / number_of_life_stages
+	current_life_stage = 1
+	current_scale_multiplier = _base_scale_multiplier / number_of_life_stages
 
 	var parent_node: Node = details.sprite.instantiate()
 	var sprite_sheet: AnimatedSprite2D = parent_node.find_child("Animations")
@@ -87,9 +87,9 @@ func _init(details: FishDetails) -> void:
 	animated_sprite.reparent(self)
 	parent_node.queue_free()
 
-	_sprite.scale = Vector2(_base_scale_multiplier, _base_scale_multiplier)
+	_sprite.scale = Vector2(current_scale_multiplier, current_scale_multiplier)
 	_sprite.visible = false
-	animated_sprite.scale = Vector2(_base_scale_multiplier, _base_scale_multiplier)
+	animated_sprite.scale = Vector2(current_scale_multiplier, current_scale_multiplier)
 	animated_sprite.play("swim")
 
 	_hunger_icon = Sprite2D.new()
@@ -146,18 +146,14 @@ func _physics_process(_delta: float) -> void:
 	if velocity.x < 0:
 		if facing_direction == Direction.RIGHT:
 			if animated_sprite.animation == "chomp":
-				print("CHOMP PLAYING")
 				await animated_sprite.animation_finished
-				print("chomp finished - continuing")
 			animated_sprite.play("turn")
 			animated_sprite.animation_finished.connect(func(): handle_turn(false))
 			facing_direction = Direction.LEFT
 	else:
 		if facing_direction == Direction.LEFT:
 			if animated_sprite.animation == "chomp":
-				print("CHOMP PLAYING")
 				await animated_sprite.animation_finished
-				print("chomp finished - continuing")
 			animated_sprite.play("turn")
 			animated_sprite.animation_finished.connect(func(): handle_turn(true))
 			facing_direction = Direction.RIGHT
@@ -199,6 +195,22 @@ func handle_hunger(color: Color, display_icon: bool) -> void:
 func handle_idle() -> void:
 	_state_machine.enter_state_and_cleanup(_idle_state)
 
-func handle_chomp() -> void:
+func handle_life_stage_up() -> void:
+	if current_life_stage >= number_of_life_stages: return
+	print("LIFE STAGE UP BABYYYYY")
+	current_life_stage += 1
+	var tween: Tween = create_tween()
+	var new_multiplier = (_base_scale_multiplier / number_of_life_stages) * (current_life_stage * 1.25)
+	var new_scale = Vector2(new_multiplier, new_multiplier)
+	print("new scale:")
+	print(new_scale)
+	tween.tween_property(animated_sprite, "scale", new_scale * 1.2,  1)
+	# await tween.finished
+	# tween.tween_property(animated_sprite, "scale", new_scale, 0.5)
+
+func handle_chomp(hunger_restored: int) -> void:
 	animated_sprite.play("chomp")
 	animated_sprite.animation_finished.connect(func(): animated_sprite.play("swim"))
+	self._hunger_needed_until_next_stage -= hunger_restored
+	if _hunger_needed_until_next_stage <= 0:
+		handle_life_stage_up()
