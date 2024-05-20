@@ -24,3 +24,6 @@ var life_span: int # in seconds
 
 var hunger_needed_until_next_stage: int
 var number_of_life_stages: int
+
+var production_cooldown: float
+var produces: Array[int] # array of coin id's

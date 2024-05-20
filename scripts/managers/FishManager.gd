@@ -23,6 +23,8 @@ var fish_1: Dictionary = {
 	"hunger_needed_until_next_stage": 0,
 	"unlocked": true,
 	"number_of_life_stages": 3,
+	"production_cooldown": 5,
+	"produces": [null, 0, 1]
 }
 
 func load_fish_to_db() -> void:

@@ -38,6 +38,7 @@ var _hunger_needed_until_next_stage: int = -1
 var _strength: int = -1
 var _defense: int = -1
 var _type: GameManager.FishType = GameManager.FishType.PRODUCER
+var _production_cooldown: float
 
 signal update_direction
 signal collided_with_bottom_of_tank
@@ -48,12 +49,23 @@ var number_of_life_stages: int = 3
 var current_scale_multiplier: float
 var current_life_stage: int = 1
 
+var current_production: Coin
+var production_options: Array[Coin]
+
 enum Direction {
 	LEFT,
 	RIGHT
 }
 
 var facing_direction: Direction = Direction.LEFT
+
+func choose_production_item() -> void:
+	var production_option_amount: int = production_options.size()
+	if production_option_amount != number_of_life_stages:
+		push_error("WRONG AMOUNT OF PRODUCTION OPTIONS FOR LIFE STAGES")
+	var working_option = production_options[current_life_stage]
+	if working_option == -1: current_production = null
+	current_production = working_option
 
 func _init(details: FishDetails) -> void:
 	_id = details.id
@@ -74,6 +86,7 @@ func _init(details: FishDetails) -> void:
 	_defense = details.defense
 	_unlocked = details.unlocked
 	number_of_life_stages = details.number_of_life_stages
+	_production_cooldown = details.production_cooldown
 
 	current_life_stage = 1
 	current_scale_multiplier = _base_scale_multiplier / number_of_life_stages
@@ -214,3 +227,6 @@ func handle_chomp(hunger_restored: int) -> void:
 	animated_sprite.animation_finished.connect(func(): animated_sprite.play("swim"))
 	self._hunger_needed_until_next_stage -= hunger_restored
 	if _hunger_needed_until_next_stage <= 0: handle_life_stage_up()
+
+func produce_coin() -> void:
+	if !current_production: return
